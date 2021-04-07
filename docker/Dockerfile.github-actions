@@ -1,0 +1,35 @@
+ARG JAVA_VERSION=15
+ARG JVM_IMPL=hotspot
+
+FROM adoptopenjdk:${JAVA_VERSION}-jre-${JVM_IMPL} AS extractor
+
+WORKDIR /src
+
+COPY ./srz-backend*.jar srz-backend.jar
+RUN java -Djarmode=layertools -jar srz-backend.jar extract
+
+FROM adoptopenjdk:${JAVA_VERSION}-jre-${JVM_IMPL}
+
+ARG SRZ_BACKEND_USER=srz-backend
+ARG SRZ_BACKEND_GROUP=srz-backend
+ARG DATA_DIR=/data
+
+RUN set -o errexit -o nounset \
+    && groupadd --system --gid 1000 ${SRZ_BACKEND_GROUP} \
+    && useradd --system --gid ${SRZ_BACKEND_GROUP} --uid 1000 --shell /bin/bash --create-home ${SRZ_BACKEND_USER} \
+    && mkdir -p ${DATA_DIR} \
+    && chown --recursive ${SRZ_BACKEND_USER}:${SRZ_BACKEND_GROUP} ${DATA_DIR} \
+    && chown --recursive ${SRZ_BACKEND_USER}:${SRZ_BACKEND_GROUP} /home/${SRZ_BACKEND_USER}
+
+WORKDIR ${DATA_DIR}
+
+USER ${SRZ_BACKEND_USER}:${SRZ_BACKEND_GROUP}
+EXPOSE 8080
+VOLUME ${DATA_DIR}
+
+COPY --from=extractor /src/dependencies/ /opt/srz-backend
+COPY --from=extractor /src/spring-boot-loader/ /opt/srz-backend
+COPY --from=extractor /src/snapshot-dependencies/ /opt/srz-backend
+COPY --from=extractor /src/application/ /opt/srz-backend
+
+ENTRYPOINT ["java", "-cp", "/opt/srz-backend", "org.springframework.boot.loader.JarLauncher"]

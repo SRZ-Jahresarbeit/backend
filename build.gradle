@@ -1,0 +1,101 @@
+buildscript {
+  ext {
+    freefairVersion = '5.3.3.3'
+  }
+}
+
+plugins {
+  id 'pmd'
+  id 'java'
+  id 'checkstyle'
+  id 'org.hibernate.orm'
+  id 'com.github.spotbugs' version '4.7.0'
+  id 'io.spring.nohttp' version '0.0.5.RELEASE'
+  id 'org.springframework.boot' version '2.4.4'
+  id 'io.freefair.lombok' version "${freefairVersion}"
+  id 'io.freefair.git-version' version "${freefairVersion}"
+  id 'com.github.jk1.dependency-license-report' version '1.16'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group = 'com.example'
+
+if (version.toString().endsWith('SNAPSHOT') || version.toString().isBlank()) {
+  version = 'edge'
+} else if (version.toString().startsWith('v')) {
+  version = version.toString().substring(1)
+}
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_15
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'com.influxdb:influxdb-client-reactive:2.1.0'
+  implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+  implementation 'org.springframework.boot:spring-boot-starter-webflux'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.5.6'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  runtimeOnly 'org.postgresql:postgresql'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+  annotationProcessor 'org.springframework:spring-context-indexer'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+lombok {
+  config.put('lombok.equalsandhashcode.callsuper', 'CALL')
+  config.put('lombok.tostring.callsuper', 'CALL')
+}
+
+hibernate {
+  enhance {
+    enableLazyInitialization = true
+    enableDirtyTracking = true
+    enableAssociationManagement = true
+    enableExtendedEnhancement = false
+  }
+}
+
+tasks.withType(JavaCompile) {
+  doFirst {
+    options.encoding = 'UTF-8'
+  }
+}
+
+tasks.withType(Checkstyle) {
+  exclude('**/module-info.java')
+  ignoreFailures = true
+  reports {
+    xml.enabled(true)
+    html.enabled(false)
+  }
+}
+
+checkstyleMain {
+  configFile = file("${rootDir}/config/checkstyle/main.xml")
+}
+
+checkstyleTest {
+  configFile = file("${rootDir}/config/checkstyle/test.xml")
+}
+
+tasks.withType(Pmd) {
+  ignoreFailures = true
+  reports {
+    xml.enabled(true)
+    html.enabled(false)
+  }
+}
+
+spotbugs {
+  ignoreFailures = true
+}
