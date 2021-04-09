@@ -53,32 +53,32 @@ jobs:
         with:
           path: '**/build/reports/pmd/*.xml'
 
-  nohttp:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRO }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: NoHttp with Gradle
-        run: ./gradlew nohttp --stacktrace --no-daemon --refresh-dependencies
+#  nohttp:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - uses: actions/cache@v2
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      - name: Set up JDK ${{ env.JAVA_VERSION }}
+#        uses: actions/setup-java@v2
+#        with:
+#          java-version: ${{ env.JAVA_VERSION }}
+#          distribution: ${{ env.JAVA_DISTRO }}
+#
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
+#
+#      - name: NoHttp with Gradle
+#        run: ./gradlew nohttp --stacktrace --no-daemon --refresh-dependencies
 
   test:
     runs-on: ubuntu-latest
@@ -112,7 +112,7 @@ jobs:
         run: ./gradlew test --stacktrace --no-daemon --refresh-dependencies
 
   build:
-    needs: [ lint, nohttp, test ]
+    needs: [ lint, test ] # nohttp
     runs-on: ubuntu-latest
 
     steps:
