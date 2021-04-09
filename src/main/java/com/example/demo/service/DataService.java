@@ -15,7 +15,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -62,13 +61,5 @@ public final class DataService {
     final DataModel model = new DataModel(sensorId.toString(), data);
 
     this.writeApi.writeMeasurement(WritePrecision.S, Maybe.just(model));
-  }
-
-  public Mono<Void> delete(final UUID sensorId, final Instant from, final Instant to) {
-    if (!this.sensorService.exist(sensorId)) {
-      throw new NotFoundException(sensorId, "SENSOR_NOT_FOUND");
-    }
-
-    return Mono.empty();
   }
 }
