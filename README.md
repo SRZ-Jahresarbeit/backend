@@ -2,4 +2,4 @@
 
 ## Deployment
 
-see [docker/docker-compose.yaml](docker/docker-compose.yaml)
+see [SRZ-Jahresarbeit/docker](https://github.com/SRZ-Jahresarbeit/docker)
