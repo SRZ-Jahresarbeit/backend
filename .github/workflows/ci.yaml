@@ -95,9 +95,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ matrix.java-version }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-${{ matrix.java-version }}-
 
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v2
@@ -173,6 +173,8 @@ jobs:
           main-flavor: ${{ matrix.jvm-impl == 'hotspot' }}
 
       - uses: docker/setup-qemu-action@v1
+        if: matrix.platforms != 'linux/amd64'
+
       - uses: docker/setup-buildx-action@v1
 
       - name: Cache Docker layers
