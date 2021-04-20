@@ -26,8 +26,6 @@ if (version.toString().endsWith('SNAPSHOT') || version.toString().isBlank()) {
   version = version.toString().substring(1)
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_16
-
 repositories {
   mavenCentral()
 }
@@ -45,6 +43,12 @@ dependencies {
   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
   annotationProcessor 'org.springframework:spring-context-indexer'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(15)
+  }
 }
 
 test {
