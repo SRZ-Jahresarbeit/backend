@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DateException;
 import com.example.demo.InfluxDB2Properties;
 import com.example.demo.NotFoundException;
 import com.example.demo.dto.Data;
@@ -31,6 +32,12 @@ public final class DataService {
     final Optional<Instant> to,
     final Resolution resolution
   ) {
+    final Instant toDate = to.orElseGet(Instant::now);
+
+    if (from.isBefore(toDate)) {
+      throw new DateException(from, toDate, "is not before");
+    }
+
     if (!this.sensorService.exist(sensorId)) {
       throw new NotFoundException(sensorId, "SENSOR_NOT_FOUND");
     }
