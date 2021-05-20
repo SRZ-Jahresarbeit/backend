@@ -21,14 +21,12 @@ public class SensorController implements ISensorController {
 
   @Override
   public Sensor create(@Valid final Sensor sensor) {
-    sensor.setId(null);
     return this.sensorService.create(sensor);
   }
 
   @Override
   public Sensor update(final UUID sensorId, @Valid final Sensor sensor) {
-    sensor.setId(sensorId);
-    return this.sensorService.update(sensor);
+    return this.sensorService.update(sensorId, sensor);
   }
 
   @Override

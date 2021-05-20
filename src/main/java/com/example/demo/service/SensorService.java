@@ -33,10 +33,8 @@ public final class SensorService {
     return new Sensor(this.sensorRepository.save(new SensorModel(sensor)));
   }
 
-  public Sensor update(final Sensor sensor) {
-    assert sensor.getId() != null;
-
-    final SensorModel model = this.sensorRepository.findById(sensor.getId())
+  public Sensor update(final UUID id, final Sensor sensor) {
+    final SensorModel model = this.sensorRepository.findById(id)
       .orElseThrow(() -> new NotFoundException(sensor.getId(), "SENSOR_NOT_FOUND"));
 
     model.setName(sensor.getName());
