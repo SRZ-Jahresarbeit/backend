@@ -34,7 +34,7 @@ public final class DataService {
   ) {
     final Instant toDate = to.orElseGet(Instant::now);
 
-    if (from.isBefore(toDate)) {
+    if (!from.isBefore(toDate)) {
       throw new DateException(from, toDate, "is not before");
     }
 
