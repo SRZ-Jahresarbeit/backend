@@ -49,9 +49,9 @@ public class MqttConfiguration {
     final MqttClient client = new MqttClient(properties.getUrl(), CLIENT_ID, persistence);
     client.connect(options);
 
-    client.subscribe("sensor/#", (topic, message) -> {
+    client.subscribe("sensor_id/#", (topic, message) -> {
       try {
-        final UUID sensorId = UUID.fromString(topic.substring(7));
+        final UUID sensorId = UUID.fromString(topic.substring(10));
         final double value = Double.parseDouble(new String(message.getPayload(), CHARSET));
         dataService.publish(sensorId, new Data(Instant.now(), value));
       }
