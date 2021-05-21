@@ -60,7 +60,7 @@ public final class DashboardService {
   }
 
   public void delete(final UUID dashboardId) {
-    if (this.dashboardRepository.existsById(dashboardId)) {
+    if (!this.dashboardRepository.existsById(dashboardId)) {
       throw new NotFoundException(dashboardId, "DASHBOARD_NOT_FOUND");
     }
 

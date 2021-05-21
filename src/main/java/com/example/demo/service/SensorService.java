@@ -44,7 +44,7 @@ public final class SensorService {
   }
 
   public void delete(final UUID sensorId) {
-    if (this.sensorRepository.existsById(sensorId)) {
+    if (!this.sensorRepository.existsById(sensorId)) {
       throw new NotFoundException(sensorId, "SENSOR_NOT_FOUND");
     }
 
