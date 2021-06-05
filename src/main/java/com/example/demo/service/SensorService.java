@@ -2,19 +2,23 @@ package com.example.demo.service;
 
 import com.example.demo.NotFoundException;
 import com.example.demo.dto.Sensor;
+import com.example.demo.jpa.model.DashboardModel;
 import com.example.demo.jpa.model.SensorModel;
+import com.example.demo.jpa.repository.DashboardRepository;
 import com.example.demo.jpa.repository.SensorRepository;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public final class SensorService {
+public class SensorService {
 
   private final SensorRepository sensorRepository;
+  private final DashboardRepository dashboardRepository;
 
   public Set<Sensor> findAll() {
     return this.sensorRepository.findAll()
@@ -43,10 +47,15 @@ public final class SensorService {
     return new Sensor(this.sensorRepository.save(model));
   }
 
+  @Transactional
   public void delete(final UUID sensorId) {
     if (!this.sensorRepository.existsById(sensorId)) {
       throw new NotFoundException(sensorId, "SENSOR_NOT_FOUND");
     }
+
+    final Set<DashboardModel> dashboards = this.dashboardRepository.findBySensor(sensorId);
+    dashboards.forEach(dashboard -> dashboard.getSensors().removeIf(sensor -> sensor.getId() == sensorId));
+    this.dashboardRepository.saveAll(dashboards);
 
     this.sensorRepository.deleteById(sensorId);
   }
