@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    freefairVersion = '5.3.3.3'
+    freefairVersion = '6.1.0'
   }
 }
 
