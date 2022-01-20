@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'com.influxdb:influxdb-client-reactive:3.1.0'
+  implementation 'com.influxdb:influxdb-client-reactive:4.1.0'
   implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
