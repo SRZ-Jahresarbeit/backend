@@ -11,7 +11,7 @@ plugins {
   id 'org.hibernate.orm'
   id 'com.github.spotbugs' version '4.7.1'
   id 'io.spring.nohttp' version '0.0.8'
-  id 'org.springframework.boot' version '2.5.3'
+  id 'org.springframework.boot' version '2.6.4'
   id 'io.freefair.lombok' version "${freefairVersion}"
   id 'io.freefair.git-version' version "${freefairVersion}"
   id 'com.github.jk1.dependency-license-report' version '1.16'
